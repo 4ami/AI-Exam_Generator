@@ -25,8 +25,7 @@ class _HomeLayoytState extends State<HomeLayoyt> {
         alignment: Alignment.center,
         clipBehavior: Clip.antiAlias,
         children: [
-          WaveWidget(color: Colors.deepPurple[600]!, free: .1),
-          const WaveWidget(color: Colors.blue, free: .4),
+          WaveWidget(color: Colors.grey.shade300, free: .1),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 1, sigmaY: 2),
             child: const SizedBox(),

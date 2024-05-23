@@ -31,6 +31,8 @@ class CurvedAnimatedPainter extends CustomPainter {
     path.lineTo(size.width, size.height);
     path.close();
     canvas.drawPath(path, paint);
+    canvas.translate(3, 2);
+    canvas.drawShadow(path, Colors.black38, 3, false);
   }
 
   @override

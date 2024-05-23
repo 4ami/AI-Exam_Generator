@@ -42,7 +42,7 @@ class _ExamConfLayoutState extends State<ExamConfLayout> {
           clipBehavior: Clip.antiAlias,
           alignment: Alignment.center,
           children: [
-            WaveWidget(color: Colors.deepPurple[400]!),
+            WaveWidget(color: Colors.grey.shade100),
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: const SizedBox(),
@@ -77,9 +77,9 @@ class _ExamConfLayoutState extends State<ExamConfLayout> {
     );
   }
 
-  Padding _generateButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+  Container _generateButton(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 150),
       child: FilledButton(
         clipBehavior: Clip.antiAlias,
         style: _buttonStyle(),
@@ -136,7 +136,7 @@ class _ExamConfLayoutState extends State<ExamConfLayout> {
 
   ButtonStyle _buttonStyle() {
     return const ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(Colors.redAccent),
+      backgroundColor: MaterialStatePropertyAll(Colors.blue),
     );
   }
 

@@ -6,10 +6,12 @@ class GlassContainer extends StatelessWidget {
     this.height,
     this.width,
     required this.child,
+    this.color,
   });
   final Widget child;
   final double? height;
   final double? width;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +24,7 @@ class GlassContainer extends StatelessWidget {
 
   BoxDecoration _decoration() {
     return BoxDecoration(
-      color: Colors.purple[900]!.withOpacity(.4),
+      color: color ?? Colors.blue[900]!.withOpacity(.4),
       borderRadius: BorderRadius.circular(20),
       boxShadow: _containerShadows,
     );
