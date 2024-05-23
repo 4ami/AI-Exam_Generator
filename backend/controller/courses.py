@@ -153,14 +153,16 @@ class CourseExams:
             print("No Old Exams, You Can write!")
         return
     def __split(self,newQs)->list:
-        pattern = r'\*\*Question Type: (.*?)\*\*\n(.*?)\n\*\*Answer:'
+        pattern = r'\d+\.\s+(.*?)\s+([A-D]\))\s+(.*?)(?=\n\d+\.|\n##|\Z)'
         matches = [match.strip() for match in re.findall(pattern=pattern, string= newQs , flags=re.DOTALL)]
         newOnes = []
-        for i in matches:
-            match = re.search(r'\*\*Question:\*\*\s*(.*)', i)
-            type = re.search(r'\*\*Question Type:\s*(.*?)\*\*', i)
-            if match:
-                newOnes.append((match.group(1).strip(), type.group(1).strip()))
+        for match in matches:
+            question_text, correct_answer_letter, correct_answer_text = match
+            # Detect question type from the answer options structure
+            question_type = "Multiple-Choice" if correct_answer_letter in ['A)', 'B)', 'C)', 'D)'] else "Short Answer"
+            
+            # Append question text and type
+            newOnes.append((question_text.strip(), question_type))
         return newOnes
     def check_similarities(self, newQs:str, threshold=0.75):
         pairs = []

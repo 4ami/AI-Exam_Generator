@@ -1,4 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
+import torch
 from transformers import PegasusTokenizer, PegasusForConditionalGeneration
 import re
 class _ParaphraseModel:
@@ -13,8 +14,8 @@ class _ParaphraseModel:
         generated_tokens = self.model.generate(**encoded, 
                                        max_length=60, 
                                        num_beams=10,
-                                    #    num_return_sequences=1,
-                                    #    temperature=1.5
+                                       num_return_sequences=1,
+                                       temperature=1.5
                                        )
         paraphrased = [self.tokenizer.decode(output, skip_special_tokens=True) for output in generated_tokens]
         return paraphrased
@@ -32,7 +33,19 @@ class NLP:
         self.PM = _ParaphraseModel()
         return
     def isSimilar(self, newQ:str, oldQ:str):
+        
         new_embeddings = self.nlp.encode(newQ, convert_to_tensor=True)
         old_embeddings = self.nlp.encode(oldQ, convert_to_tensor=True)
-        similarities = util.pytorch_cos_sim(new_embeddings, old_embeddings)
-        return similarities
+        print(new_embeddings)
+        print(old_embeddings)
+        # Check if embeddings are tensors and print their shapes
+        # if not isinstance(new_embeddings, torch.Tensor) or not isinstance(old_embeddings, torch.Tensor):
+        #     raise ValueError("Embeddings must be PyTorch tensors.")
+        # print(f"New embeddings shape: {new_embeddings.shape}")
+        # print(f"Old embeddings shape: {old_embeddings.shape}")
+
+        # # Check for empty tensors
+        # if new_embeddings.nelement() == 0 or old_embeddings.nelement() == 0:
+        #     raise ValueError("One of the embeddings is empty.")
+        # similarities = util.pytorch_cos_sim(new_embeddings, old_embeddings)
+        # return similarities.item()

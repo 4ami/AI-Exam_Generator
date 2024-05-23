@@ -85,45 +85,54 @@ from controller.courses import CourseExams
 #     print(f'Paraphrased: {exams.paraphrase(i[0])}')
 
 response = '''
-           ### Multiple-Choice Questions (Easy)
+## Multiple-Choice Questions
 
-1. **What is a zero-sum game as discussed in adversarial search in AI?**
-   - A) A game where one player's gain does not affect the other's loss.
-   - B) A game where both players have unlimited resources.
-   - C) A game where one player's gain is exactly balanced by the losses of another.
-   - D) A game where players do not compete but cooperate.
+1. What does the heuristic function \( h(n) \) represent in the context of Best-First Search algorithms?
+   A) The actual cost from the start node to node \( n \)
+   B) The estimated cost from node \( n \) to a goal node
+   C) The total number of nodes in the search space
+   D) The maximum depth of the search space
+   **Answer: B) The estimated cost from node \( n \) to a goal node. This function helps the search algorithm estimate the cheapest path to the goal.**
 
-   **Answer: C) A game where one player's gain is exactly balanced by the losses of another.**
+2. In the context of adversarial search, what is a zero-sum game?
+   A) A game where the sum of the points is zero at the start of the game.
+   B) A game where no points are scored.
+   C) A game where one player's gain is exactly balanced by the other's loss.
+   D) A game where the game ends with zero points for both players.
+   **Answer: C) A game where one player's gain is exactly balanced by the other's loss. This means each agent's gain or loss of utility is exactly balanced by the losses or gains of the utility of the other participant.**
 
-2. **In the context of AI, what does the Minimax algorithm do?**
-   - A) It minimizes the maximum possible loss for a worst-case scenario.
-   - B) It maximizes the minimum gain from the available choices.
-   - C) Both A and B.
-   - D) It chooses the first available move without any calculation.
+3. Which algorithm combines the benefits of both Uniform-cost search and Greedy Best-First Search?
+   A) A* Search
+   B) Depth-first search
+   C) Breadth-first search
+   D) Hill-climbing search
+   **Answer: A) A* Search. A* Search evaluates nodes by combining \( g(n) \), the cost to reach the node, and \( h(n) \), the cost to get from the node to the goal, giving the estimated total cost of the cheapest solution path through \( n \).**
 
-   **Answer: C) Both A and B.**
+## True/False Questions
 
-### True/False Questions (Medium)
+4. The Greedy Best-First Search algorithm always provides the optimal solution to the problem.
+   **Answer: False. Greedy Best-First Search is not optimal because it chooses the node that appears to be closest to the goal, possibly leading to longer paths in some scenarios.**
 
-3. **True/False: The utility values at the end of a zero-sum game are always equal and opposite.**
-   - **Answer: True.** Explanation: In zero-sum games, the gain or loss of utility is exactly balanced by the losses or gains of the utility of the other participant, making the utility values at the end of the game equal and opposite.
+5. A heuristic is considered admissible if it never overestimates the true cost to reach the goal node from any node in the search space.
+   **Answer: True. An admissible heuristic is optimistic and provides a cost estimate that is less than or equal to the actual minimum cost from the current node to the goal, ensuring that the search algorithm is optimal.**
 
-4. **True/False: Alpha-beta pruning returns a different result compared to the Minimax algorithm.**
-   - **Answer: False.** Explanation: Alpha-beta pruning enhances the Minimax algorithm by eliminating branches that cannot possibly influence the final decision, thus optimizing performance without altering the result.
+6. The A* Search algorithm is complete and optimal if the heuristic function is admissible.
+   **Answer: True. A* Search is complete and guarantees an optimal solution if the heuristic used is admissible, as it will not overestimate the cost to reach the goal.**
 
-### Short Answer Questions (Hard)
+7. In a zero-sum game of adversarial search, increasing the search depth always leads to better performance of the algorithm.
+   **Answer: False. Increasing search depth can improve the decision-making capability of the algorithm up to a certain extent; however, it also increases the computation time and may lead to diminishing returns in performance improvement.**
 
-5. **Explain the role of the evaluation function in the Minimax algorithm.**
-   - **Answer:** In the Minimax algorithm, the evaluation function is used to assess the desirability of a game's position. At terminal nodes of the game tree, it assigns a numerical value to the end states, which helps in backpropagating the values to determine the optimal gameplay strategy.
+8. Genetic Algorithms use a population of solutions to evolve towards better solutions over generations.
+   **Answer: True. Genetic Algorithms start with a randomly generated population of solutions and use operations like selection, crossover, and mutation to evolve solutions towards better fitness over successive generations.**
 
-6. **Describe how a game tree is utilized in adversarial AI games.**
-   - **Answer:** A game tree in adversarial AI games represents all possible moves from a given initial state, branching out according to the possible moves of each player (MAX and MIN). Each node in the tree represe
-           
-           
+## Short Answer Questions
+
+9. Explain the role of the evaluation function in the Minimax algorithm.
+   **Answer: The evaluation function is used to assign a numerical value to the game states at the leaf nodes of the game tree. This value estimates the desirability of the game's outcome from the perspective of the maximizing player, helping determine the best possible move by backpropagating these values to the root of the tree.**
+
+10. Describe how alpha-beta pruning enhances the Minimax algorithm.
+   **Answer: Alpha-beta pruning enhances the Minimax algorithm by eliminating branches in the game tree that cannot possibly affect the final decision. This pruning happens by using two parameters, alpha and beta, which represent the minimum score that the maximizing player is assured and the maximum score that the minimizing player is assured, respectively. By pruning irrelevant branches, the algorithm reduces the number of nodes it evaluates, improving the efficiency and speed of the Minimax algorithm.**
            '''
 exam = CourseExams(course= '0921-324')
 exam.read()
-ls = exam.check_similarities(response)
 print(exam.questions)
-# for i in ls:
-#    print(i)

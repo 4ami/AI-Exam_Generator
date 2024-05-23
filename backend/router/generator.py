@@ -22,12 +22,14 @@ async def generate(request: str = Form(...), content: List[UploadFile] = File(..
             # otherwise continue service routein
         res = {}
         courseExams = CourseExams(course=model.course)
-        
+        old_exams = ''
         if not courseExams.reader.check_path():
             res["similarity"] = False
             os.makedirs(f"{courseExams.reader.root}/{model.course}")
         else:
             res["similarity"] = True
+            courseExams.read()
+            old_exams = courseExams.questions
         print('Similarity: Done !')
         # Process: 
             #1- check if content recieved
@@ -73,19 +75,17 @@ async def generate(request: str = Form(...), content: List[UploadFile] = File(..
         print('Questions: Done !')
             #6- send GPT request to generate questions
         gpt = GPT_ExamGenerator()
-        exam = gpt.generate(content=cleanedContent, requiredQs=questionsRequired)
+        
+        exam = ''
+        if old_exams:
+            exam = gpt.generateDifferent(content=cleanedContent, requiredQs=questionsRequired, old= old_exams)
+        else:
+            exam = gpt.generate(content=cleanedContent, requiredQs=questionsRequired)
         print('Generate: Done !')
 
         # #     7- prepare exam {structure it in docx format}
         document_path, document_name = courseExams.write(exam=exam)
         # #     8- return the docx file, and tell whether there is similarity with 'question_bank'
-        # if not res["similarity"]:
-        #     courseExams.read()
-        #     courseExams.replace_similar(newQs=exam,fpath=document_path, content=cleanedContent, request=model)
-        #     response = FileResponse(path=document_path, filename=document_name, media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document', status_code=201)
-        #     response.headers['X-similarity'] = str(res['similarity'])
-        #     response.headers['X-similarities'] = res["similarities"]
-        #     return "response1"
         response = FileResponse(path=document_path, filename=document_name, media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document', status_code=201)
         response.headers['X-similarity'] = str(res['similarity'])
         return response
