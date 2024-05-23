@@ -22,8 +22,8 @@ class GPT_ExamGenerator:
         )
         return respnse.choices[0].message.content
     #- Questions required: {5} Multiple-choice (Difficulty: {1}), {3} True/False (Difficulty: {2}), {5} Short Answer (Difficulty: {3})
-    def generate(self, content:str, requiredQs:str, formate:str)->str:
-        
+    def generate(self, content:str, requiredQs:str)->str:
+         
         prompt = f"""
                 You are an AI assistant helping an instructor generate an exam. Create a set of exam questions based on the following criteria:
                 - Course content: {content}...

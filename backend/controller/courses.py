@@ -13,13 +13,16 @@ class _ReadCourseExams:
         self.course = course
         return
     def check_path(self)->bool:
+        print('Check 1')
         #There is no Question bank
         if not os.path.exists(f'./{self.root}'):
+            print('Check 3')
             return False
         #There is Question bank, but there is not course (092*-***)
         if not os.path.exists(f'./{self.root}/{self.course}'):
             return False
         #There is question bank for the given course
+        print('Check 2')
         return True
     def __readFile(self,path:str)->list:
         exam = Document(path)
@@ -28,9 +31,9 @@ class _ReadCourseExams:
             if not p.style.name.startswith('Heading'):
                 question = p.text.strip()
                 if question:
-                    match = re.search(r'\*\*Question:\*\*\s*(.*)', question)
+                    match = re.search(r'(\d+)\.\s*(.*)', question)
                     if match:
-                        questions.append(match.group(1).strip())
+                        questions.append(match.group(2).strip())
         return questions
     def getAll(self)->list:
         all_qs = []
@@ -51,26 +54,27 @@ class _WriteCourseExams:
         self.course = course
         return
     
-    def __nextFileName(self)->str:
+    def __nextFileName(self):
         pattern = re.compile(rf'{self.course}-e(\d+)\.docx')
         last = 0
-        
         #In case root folder of exams (course) does not exist
         if not os.path.exists(f"./{self.root}"):
             os.makedirs(f"./{self.root}/{self.course}")
-            return os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{1}.docx")
+            return (os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{1}.docx"), f"{self.course}-e{1}.docx")
         
         #In case course folder (092*-***) does not exist
         if not os.path.exists(f"./{self.root}/{self.course}"):
             os.mkdir(f'./{self.root}/{self.course}')
-            return os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{1}.docx")
+            return (os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{1}.docx"), f"{self.course}-e{1}.docx")
         
         for fname in os.listdir(f"./{self.root}/{self.course}"):
             match = pattern.match(fname)
             if match :
                 last = max(last, int(match.group(1)))
         new_file = last + 1
-        return (os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{new_file}.docx") , f"{self.course}-e{new_file}.docx")
+        print((os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{new_file}.docx")))
+        print( f"{self.course}-e{new_file}.docx")
+        return ((os.path.join(f"./{self.root}/{self.course}", f"{self.course}-e{new_file}.docx")), f"{self.course}-e{new_file}.docx")
     
     def split_Qs(self, exam:str)->tuple:
         # questions_text = re.sub(r'\s+', ' ', exam)
@@ -84,26 +88,9 @@ class _WriteCourseExams:
     
     def writeExam(self, exam:str):
         new_document = Document()
-        
-        # mcq, tf, sa = self.split_Qs(exam=exam)
-        
-        # if mcq:
-        #     new_document.add_heading("Multiple Choice Question", level=1)
-        #     for i,q in enumerate(mcq, start=1):
-        #         new_document.add_paragraph(f"{i}. {q.strip()}")
-        
-        # if tf:
-        #     new_document.add_heading("True/False Question", level=1)
-        #     for i,q in enumerate(tf, start=1):
-        #         new_document.add_paragraph(f"{i}. {q.strip()}")
-        
-        # if sa:
-        #     new_document.add_heading("Short Answers Question", level=1)
-        #     for i,q in enumerate(sa, start=1):
-        #         new_document.add_paragraph(f"{i}. {q.strip()}")
-        
-        sections = exam.split("###")
+        sections = exam.split("##")
         for section in sections[1:]:  # Skip the first split which will be empty
+            print("Hi Nabaa")
             title, *content = section.split('\n', 1)
             content = content[0] if content else ''
             
@@ -131,7 +118,7 @@ class _WriteCourseExams:
                     for line in lines[1:]:
                         new_document.add_paragraph(line.strip(), style='BodyText')
         
-        path, name = self.__nextFileName()
+        (path, name) = self.__nextFileName()
         print(path)
         new_document.save(path)
         return (path,name)
@@ -166,7 +153,7 @@ class CourseExams:
             print("No Old Exams, You Can write!")
         return
     def __split(self,newQs)->list:
-        pattern = r'(\*\*Question Type: .*?\*\*.*?)(?=\*\*Question Type|$)'
+        pattern = r'\*\*Question Type: (.*?)\*\*\n(.*?)\n\*\*Answer:'
         matches = [match.strip() for match in re.findall(pattern=pattern, string= newQs , flags=re.DOTALL)]
         newOnes = []
         for i in matches:

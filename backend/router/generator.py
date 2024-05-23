@@ -13,6 +13,7 @@ router = APIRouter()
 @router.post('/generate')
 async def generate(request: str = Form(...), content: List[UploadFile] = File(...)):
     try:
+        print('Start')
         data = json.loads(request) # parse serialized request to json
         model = GenerateRequestModel(**data) # validate request sent
         # Pre-Process
@@ -24,10 +25,10 @@ async def generate(request: str = Form(...), content: List[UploadFile] = File(..
         
         if not courseExams.reader.check_path():
             res["similarity"] = False
-            os.mkdir(path=f"{courseExams.reader.root}/{model.course}")
+            os.makedirs(f"{courseExams.reader.root}/{model.course}")
         else:
             res["similarity"] = True
-    
+        print('Similarity: Done !')
         # Process: 
             #1- check if content recieved
         if len(content) == 0:
@@ -49,6 +50,8 @@ async def generate(request: str = Form(...), content: List[UploadFile] = File(..
                 contentPromt[i] += contentProcess.convertPPTX(pptx_path=path)
         cleanedContent = ''.join(contentPromt)
         cleanedContent = contentProcess.clean(cleanedContent)    
+        print('Content Process: Done !')
+
             #4- check the request body {question types, number of questions, difficulity of questions}
         if not model.questions:
             raise HTTPException(status_code=404, detail="No questions specified to generate")
@@ -66,9 +69,13 @@ async def generate(request: str = Form(...), content: List[UploadFile] = File(..
             
         if questionsRequired.endswith(','):
             questionsRequired = questionsRequired[:-1]
+
+        print('Questions: Done !')
             #6- send GPT request to generate questions
         gpt = GPT_ExamGenerator()
         exam = gpt.generate(content=cleanedContent, requiredQs=questionsRequired)
+        print('Generate: Done !')
+
         # #     7- prepare exam {structure it in docx format}
         document_path, document_name = courseExams.write(exam=exam)
         # #     8- return the docx file, and tell whether there is similarity with 'question_bank'

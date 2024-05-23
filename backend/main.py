@@ -1,6 +1,6 @@
-# from controller.content_process import ContentProcess
-# from controller.gpt_exam_generator import GPT_ExamGenerator
-# from controller.courses import CourseExams
+from controller.content_process import ContentProcess
+from controller.gpt_exam_generator import GPT_ExamGenerator
+from controller.courses import CourseExams
 # # def main():
 # #     # pdf_example = "./content_set/221405477.pdf"
 # #     pptx_example = "./content_set/Lecture 14.pptx"
@@ -83,3 +83,47 @@
 # for i in sim:
 #     print(i)
 #     print(f'Paraphrased: {exams.paraphrase(i[0])}')
+
+response = '''
+           ### Multiple-Choice Questions (Easy)
+
+1. **What is a zero-sum game as discussed in adversarial search in AI?**
+   - A) A game where one player's gain does not affect the other's loss.
+   - B) A game where both players have unlimited resources.
+   - C) A game where one player's gain is exactly balanced by the losses of another.
+   - D) A game where players do not compete but cooperate.
+
+   **Answer: C) A game where one player's gain is exactly balanced by the losses of another.**
+
+2. **In the context of AI, what does the Minimax algorithm do?**
+   - A) It minimizes the maximum possible loss for a worst-case scenario.
+   - B) It maximizes the minimum gain from the available choices.
+   - C) Both A and B.
+   - D) It chooses the first available move without any calculation.
+
+   **Answer: C) Both A and B.**
+
+### True/False Questions (Medium)
+
+3. **True/False: The utility values at the end of a zero-sum game are always equal and opposite.**
+   - **Answer: True.** Explanation: In zero-sum games, the gain or loss of utility is exactly balanced by the losses or gains of the utility of the other participant, making the utility values at the end of the game equal and opposite.
+
+4. **True/False: Alpha-beta pruning returns a different result compared to the Minimax algorithm.**
+   - **Answer: False.** Explanation: Alpha-beta pruning enhances the Minimax algorithm by eliminating branches that cannot possibly influence the final decision, thus optimizing performance without altering the result.
+
+### Short Answer Questions (Hard)
+
+5. **Explain the role of the evaluation function in the Minimax algorithm.**
+   - **Answer:** In the Minimax algorithm, the evaluation function is used to assess the desirability of a game's position. At terminal nodes of the game tree, it assigns a numerical value to the end states, which helps in backpropagating the values to determine the optimal gameplay strategy.
+
+6. **Describe how a game tree is utilized in adversarial AI games.**
+   - **Answer:** A game tree in adversarial AI games represents all possible moves from a given initial state, branching out according to the possible moves of each player (MAX and MIN). Each node in the tree represe
+           
+           
+           '''
+exam = CourseExams(course= '0921-324')
+exam.read()
+ls = exam.check_similarities(response)
+print(exam.questions)
+# for i in ls:
+#    print(i)
